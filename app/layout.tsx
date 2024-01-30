@@ -12,20 +12,32 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body className={poppins.className}>
-      <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {/* <AuthProvider> */}
+            {/* <NextSSRPlugin */}
+              /*
+               * The `extractRouterConfig` will extract **only** the route configs
+               * from the router to prevent additional information from being
+               * leaked to the client. The data passed to the client is the same
+               * as if you were to fetch `/api/uploadthing` directly.
+               */
+              {/* routerConfig={extractRouterConfig(ourFileRouter)} */}
+            {/* /> */}
             {children}
-      </ThemeProvider>
+            {/* <Toaster richColors /> */}
+          {/* </AuthProvider> */}
+        </ThemeProvider>
       </body>
     </html>
   );

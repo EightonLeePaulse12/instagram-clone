@@ -1,20 +1,24 @@
-import NextAuth, { getServerSession, type NextAuthOptions } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import prisma from "./lib/prisma";
+import prisma from "@/lib/prisma";
 import GoogleProvider from "next-auth/providers/google";
-import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next";
+import NextAuth, { getServerSession, type NextAuthOptions } from "next-auth";
+import {
+  GetServerSidePropsContext,
+  NextApiRequest,
+  NextApiResponse,
+} from "next";
 
 export const config = {
   pages: {
     signIn: "/login",
   },
+  adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
-  adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
   },
@@ -41,22 +45,6 @@ export const config = {
         token.id = user.id;
         return token;
       }
-
-      if (!prismaUser) {
-        // Create a new user with an id
-        const newUser = await prisma.user.create({
-          data: {
-            id: token.id, // Provide the id from the token
-            name: token.name,
-            email: token.email,
-            username: token.username,
-            image: token.picture,
-          },
-        });
-    
-        return newUser;
-      }
-
       if (!prismaUser.username) {
         await prisma.user.update({
           where: {
@@ -81,13 +69,12 @@ export const config = {
 
 export default NextAuth(config);
 
-// Use in server context
-
+// Use it in server contexts
 export function auth(
-    ...args:
+  ...args:
     | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
     | [NextApiRequest, NextApiResponse]
     | []
 ) {
-    return getServerSession(...args, config)
+  return getServerSession(config, );
 }

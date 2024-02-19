@@ -1,6 +1,7 @@
 'use client';
 
 import Logo from "./Logo";
+import MoreDropdown from "./MoreDropdown";
 import NavLinks from "./NavLinks";
 
 // 1:13:21
@@ -13,8 +14,8 @@ function SideNav() {
                 <NavLinks/>
                 { /* user && profile link (use later) */}
 
-                <div>
-                    {/* <MoreDropdown/> */}
+                <div className="hidden md:flex relative md:mt-auto flex-1 items-end w-full">
+                    <MoreDropdown/>
                 </div>
             </div>
         </div>
